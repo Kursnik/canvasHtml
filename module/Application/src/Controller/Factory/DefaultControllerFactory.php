@@ -3,7 +3,6 @@
 namespace Application\Controller\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\Db\Adapter\Adapter;
 use Zend\ServiceManager\Factory\AbstractFactoryInterface;
 
 class DefaultControllerFactory implements AbstractFactoryInterface
@@ -15,7 +14,7 @@ class DefaultControllerFactory implements AbstractFactoryInterface
 
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $adapter = $container->get(Adapter::class);
-        return new $requestedName($adapter);
+        $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        return new $requestedName($entityManager);
     }
 }

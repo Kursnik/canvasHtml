@@ -2,47 +2,113 @@
 
 namespace Application\Controller;
 
-use Zend\Db\Adapter\Adapter;
-use Zend\Db\Adapter\Driver\Pgsql;
+use Application\File\Utils;
+use Doctrine\ORM\EntityManager;
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Zend\Mvc\MvcEvent;
+use Zend\View\Helper\HeadLink;
+use Zend\View\Helper\HeadMeta;
+use Zend\View\Helper\HeadScript;
+use Zend\View\Helper\HeadTitle;
+use Zend\View\Helper\InlineScript;
+use Zend\View\HelperPluginManager;
 
 abstract class AbstractController extends AbstractActionController
 {
-    private $dbAdapter;
+    /**
+     * Entity manager.
+     * @var EntityManager
+     */
+    protected $entityManager;
 
-    public function __construct(Adapter $dbAdapter = null)
+    public function __construct($entityManager)
     {
-        $this->dbAdapter = $dbAdapter;
+        $this->entityManager = $entityManager;
     }
 
-    private final function getConnection()
+    /**
+     * @var string $repository Название репозитория
+     *
+     * @return \Doctrine\ORM\EntityRepository
+     */
+    protected function getRepository($repository)
     {
-        return $this->dbAdapter->getDriver()->getConnection();
+        return $this->entityManager->getRepository($repository);
     }
 
-    protected function getDefaultHelperModel()
+    /**
+     * @return HelperPluginManager
+     */
+    protected function getViewHelperManager()
     {
-        return new ViewModel;
+        return $this->getEvent()->getApplication()->getServiceManager()->get('ViewHelperManager');
     }
 
-    protected final function beginTransaction()
+    /**
+     * @return HeadTitle
+     */
+    protected function getHeadTitle()
     {
-        $this->getConnection()->beginTransaction();
+        return $this->getViewHelperManager()->get('headTitle');
     }
 
-    protected final function commit()
+    /**
+     * @return HeadMeta
+     */
+    protected function getHeadMeta()
     {
-        $this->getConnection()->commit();
+        return $this->getViewHelperManager()->get('headMeta');
     }
 
-    protected final function rollback()
+    /**
+     * @return HeadScript
+     */
+    protected function getHeadScript()
     {
-        $this->getConnection()->rollback();
+        return $this->getViewHelperManager()->get('headScript');
     }
 
-    protected final function executeQuery($sql, array $binds = [])
+    /**
+     * @return InlineScript
+     */
+    protected function getInlineScript()
     {
-        return $this->dbAdapter->query($sql)->execute($binds);
+        return $this->getViewHelperManager()->get('inlineScript');
+    }
+
+    /**
+     * @return HeadLink
+     */
+    protected function getHeadLink()
+    {
+        return $this->getViewHelperManager()->get('headLink');
+    }
+
+    protected function appendAdditionalScripts(array $jsList)
+    {
+        $headScript = $this->getHeadScript();
+        foreach ($jsList as $jsPath) {
+            $headScript->appendFile(Utils::appendDate($jsPath));
+        }
+    }
+
+    protected function appendAdditionalStylesheets(array $cssList)
+    {
+        $headLink = $this->getHeadLink();
+        foreach ($cssList as $cssPath) {
+            $headLink->appendStylesheet(Utils::appendDate($cssPath), null);
+        }
+    }
+
+    public function onDispatch(MvcEvent $e)
+    {
+        $this->appendAdditionalScripts([
+            '/js/vendor/jquery.min.js',
+            '/js/vendor/jquery.validate.min.js',
+            '/js/main.js',
+        ]);
+        $this->appendAdditionalStylesheets(['/css/main.css']);
+
+        return parent::onDispatch($e);
     }
 }

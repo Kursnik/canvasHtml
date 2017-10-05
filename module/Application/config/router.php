@@ -10,7 +10,7 @@ return [
         'home'         => [
             'type'    => Segment::class,
             'options' => [
-                'route'       => '/',
+                'route'       => '/[:action]',
                 'defaults'    => [
                     'controller' => Controller\IndexController::class,
                     'action'     => 'index',

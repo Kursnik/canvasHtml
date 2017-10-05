@@ -1,0 +1,40 @@
+<div class="popup" id="popup">
+    <div class="popup__inner">
+        <div class="popup__close" id="popup-close">
+            <svg class="popup__close-icon">
+                <path fill-rule="evenodd"
+                      fill="rgb(4, 153, 197)"
+                      d="M11.001,1.375 L6.875,5.500 L11.000,9.626 L11.001,9.626 L9.625,11.001 L5.500,6.875 L1.375,11.001 L-0.001,9.626 L4.125,5.500 L-0.001,1.375 L1.374,-0.001 L5.500,4.125 L9.625,-0.000 L9.625,-0.001 L11.001,1.375 Z"/>
+            </svg>
+        </div>
+        <div class="save-form__wrapper">
+            <div class="save-form__sections" id="save-section">
+                <div class="save-form__section save-form__section-active">
+                    <div class="save-form__head">Сохранение изображения</div>
+                    <form class="save-form"
+                          id="save-form"
+                          method="post"
+                          autocomplete="off"
+                          data-action="<?php echo $this->url('home', ['action' => 'save']) ?>">
+                        <div class="text-field__row">
+                            <div class="text-field__lable__wrapper text-field__required">
+                                <label class="text-field__lable" for="login">Логин</label>
+                            </div>
+                            <input type="text" name="login" id="login" class="text-field" required autocomplete="off">
+                        </div>
+                        <div class="text-field__row">
+                            <div class="text-field__lable__wrapper text-field__required">
+                                <label class="text-field__lable" for="password">Пароль</label>
+                            </div>
+                            <input type="password" name="password" id="password" class="text-field" required autocomplete="off">
+                        </div>
+                        <div class="error"></div>
+                    </form>
+                </div>
+            </div>
+            <div class="save-form__btn-wrapper">
+                <div class="action-btn save-form__btn-save">Сохранить</div>
+            </div>
+        </div>
+    </div>
+</div>
