@@ -68,6 +68,7 @@
     function popupClose() {
         $(popup).fadeOut();
         $('body').removeClass('popup-opened');
+        $(popup).find('#save-form').get(0).reset();
     }
 
     function initCanvasButtons(container) {
@@ -141,7 +142,6 @@
                 success: function(response) {
                     if (response.status === 'success') {
                         saveForm.get(0).reset();
-                        resetCanvas();
                         popupClose();
                     } else {
                         const errorMessage = saveForm.find('div.error');
@@ -163,6 +163,52 @@
             initCanvas(container);
             initCanvasButtons(container);
             initPopup();
+        },
+        setImage: function (imageHtml, id) {
+            resetCanvas();
+            context.drawImage(imageHtml, 0, 0);
+            $('#popup')
+                .find('form.save-form')
+                .find('input#id')
+                .val(id);
         }
     });
 })(Canvas = window.Canvas || {}, $);
+
+(function(Module, Canvas, $) {
+    var canvasContainer,
+        galleryContainer;
+
+    function initEditButtons() {
+        galleryContainer.find('a.edit').on('click', function (event) {
+            event.preventDefault();
+
+            const $self = $(this);
+            Canvas.setImage($self.siblings('img').get(0), $self.data('id'));
+
+            galleryContainer.fadeOut(function () {
+                canvasContainer.fadeIn();
+            });
+        });
+    }
+
+    $.extend(Module, {
+        init: function () {
+            canvasContainer = $('section.image-edit');
+            galleryContainer = $('section.gallery');
+
+            Canvas.init(canvasContainer);
+            canvasContainer.find('div.canvas-buttons').append(
+                $('<button>', {type: 'button', text: 'Назад'}).on('click', function () {
+                    canvasContainer.fadeOut(function () {
+                        galleryContainer.fadeIn(function () {
+                            location.reload();
+                        });
+                    });
+                })
+            );
+
+            initEditButtons(galleryContainer);
+        }
+    });
+})(Gallery = window.Gallery || {}, Canvas, $);

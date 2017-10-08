@@ -15,7 +15,8 @@
                           id="save-form"
                           method="post"
                           autocomplete="off"
-                          data-action="<?php echo $this->url('home', ['action' => 'save']) ?>">
+                          data-action="<?php echo $this->url('home', ['action' => $this->action]) ?>">
+                        <input type="hidden" id="id" name="id" />
                         <div class="text-field__row">
                             <div class="text-field__lable__wrapper text-field__required">
                                 <label class="text-field__lable" for="login">Логин</label>

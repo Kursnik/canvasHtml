@@ -5,7 +5,11 @@
         <div class="image-item">
             <img src="<?php echo '/files/' . $image->getName() ?>"
                  alt="<?php echo $image->getName() ?>">
-            <a href="#" class="edit"></a>
+            <a href="#" class="edit" data-id="<?php echo $image->getId() ?>"></a>
         </div>
     <?php } ?>
+</section>
+
+<section class="canvas-container image-edit">
+    <?php echo $this->partial('partials/popup', ['action' => 'edit']) ?>
 </section>

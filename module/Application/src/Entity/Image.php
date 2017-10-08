@@ -57,7 +57,7 @@ class Image
 
     public function setPassword($password)
     {
-        $this->password = $password;
+        $this->password = md5($password);
     }
 
     public function getName()
