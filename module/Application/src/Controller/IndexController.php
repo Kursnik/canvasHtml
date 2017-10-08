@@ -26,7 +26,8 @@ class IndexController extends AbstractController
 
     public function listAction()
     {
-
+        return (new ViewModel)
+            ->setVariable('gallery', $this->getRepository(Image::class)->findAll());
     }
 
     private function getPreparedImageForm()

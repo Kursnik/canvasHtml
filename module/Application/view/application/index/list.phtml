@@ -1,0 +1,11 @@
+<section class="gallery">
+    <?php
+    /** @var \Application\Entity\Image $image */
+    foreach ($this->gallery as $image) { ?>
+        <div class="image-item">
+            <img src="<?php echo '/files/' . $image->getName() ?>"
+                 alt="<?php echo $image->getName() ?>">
+            <a href="#" class="edit"></a>
+        </div>
+    <?php } ?>
+</section>

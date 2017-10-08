@@ -117,7 +117,7 @@
         popupCloseBtn.on('click', popupClose);
 
         saveSectionBtn.on('click', function () {
-            if (!saveForm.valid()) {
+            if (!saveForm.valid() || saveSectionBtn.prop('disabled')) {
                 return;
             }
 
@@ -135,6 +135,9 @@
                 data: data,
                 contentType: 'application/x-www-form-urlencoded',
                 dataType: 'json',
+                beforeSend: function() {
+                    saveSectionBtn.prop('disabled', true);
+                },
                 success: function(response) {
                     if (response.status === 'success') {
                         saveForm.get(0).reset();
@@ -147,6 +150,9 @@
                             errorMessage.fadeOut().text('');
                         }, 2000);
                     }
+                },
+                complete: function () {
+                    saveSectionBtn.prop('disabled', false);
                 }
             });
         });
